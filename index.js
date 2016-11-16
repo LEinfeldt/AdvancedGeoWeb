@@ -24,7 +24,7 @@ pool.connect(function(err, client, done) {
     if (err) throw err;
 
     //execute an operation
-    client.query(...someQuery...), function(err, result) {
+    client.query(/*...someQuery...,*/ function(err, result) {
         //release client to pool
         done();
 
@@ -33,7 +33,7 @@ pool.connect(function(err, client, done) {
         }
         console.log(result.rows[0].numbers);
         // do some stuff with the output
-    }
+    })
 });
 
 pool.on('error', function(err, client) {
@@ -47,3 +47,6 @@ app.post('/saveGPS', function(req, res) {
     // store the data in the DB
 })
 
+app.listen(8080, function() {
+    console.log("Server listening on port 8080");
+});
