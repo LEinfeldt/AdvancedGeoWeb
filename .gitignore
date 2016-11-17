@@ -1,2 +1,5 @@
 # DB private user data
 config.js
+
+#don't upload the node modules
+node_modules
