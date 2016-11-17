@@ -11,6 +11,13 @@ var app = express();
 var client = new pg.Client();
 
 
+//accept headers stuff
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');    // allow CORS
+    res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE');
+    next();
+});
+
 /**
  * @desc Setup the client pool
  */
