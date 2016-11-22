@@ -8,21 +8,21 @@ var config = require('./config.js');
 var express = require('express');
 var pg = require('pg');
 var app = express();
-var client = new pg.Client();
+//var client = new pg.Client();
 
 
 //accept headers stuff
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');    // allow CORS
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE');
-    res.setHeader('Access-Control_Allow-Headers', 'X-Requested-With, Content-Type, Accept');
+    res.setHeader('Access-Control_Allow-Headers', 'X-Requested-With, Content-Type');
     next();
 });
 
 /**
  * @desc Setup the client pool
  */
-var pool = new pg.Pool(config.dbdata);
+var pool = new pg.Pool(config);
 
 pool.on('error', function(err, client) {
     console.error('idle client error', err.message, err.stack);
@@ -34,13 +34,15 @@ pool.on('error', function(err, client) {
 app.post('/api/1.0/GPS', function(req, res) {
 
     console.log("received some data");
+    var loc = JSON.parse(req.body);
     
     //Connect to the database
     pool.connect(function(err, client, done) {
         if (err) throw err;
 
         //execute an operation
-        client.query('INSERT INTO locations(geom) VALUES(ST_GeomFromText(POINT(' + req.json.geometry + '), 4326));', function(err, result) {
+        client.query('INSERT INTO locations(geom) VALUES(ST_GeomFromText(POINT(' + loc.properties.geometry.coordinates[1] + ' ' + 
+        loc.properties.geometry.coordinates[0] + '), 4326));', function(err, result) {
             //release client to pool
             done();
 
