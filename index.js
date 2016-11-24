@@ -7,8 +7,13 @@
 var config = require('./config.js');
 var express = require('express');
 var pg = require('pg');
+var bodyParser = require('body-parser');
 var app = express();
 //var client = new pg.Client();
+
+
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 
 //accept headers stuff
@@ -34,23 +39,21 @@ pool.on('error', function(err, client) {
 app.post('/api/1.0/GPS', function(req, res) {
 
     console.log("received some data");
-    var loc = JSON.parse(req.body);
+    console.log(req.body);
     
     //Connect to the database
     pool.connect(function(err, client, done) {
         if (err) throw err;
 
         //execute an operation
-        client.query('INSERT INTO locations(geom) VALUES(ST_GeomFromText(POINT(' + loc.properties.geometry.coordinates[1] + ' ' + 
-        loc.properties.geometry.coordinates[0] + '), 4326));', function(err, result) {
+        client.query("INSERT INTO locations(geom) VALUES(ST_GeomFromText('POINT(" + req.body.geometry.coordinates[1] + " " + 
+        req.body.geometry.coordinates[0] + ")', 4326));", function(err, result) {
             //release client to pool
             done();
-
+            res.status(200).send("Inserted location into the DB");
             if(err) {
                 return console.error('error in query', err);
             }
-            console.log(result.rows[0].numbers);
-            // do some stuff with the output
         });
     });
 });
