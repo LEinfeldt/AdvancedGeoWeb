@@ -47,4 +47,7 @@ VALUES(ST_GeomFromText('POINT(-59.0513 53.7331)', 4326));
 
 -- Example: Get point
 SELECT ST_AsText(geom) FROM locations;
+
+-- Example: Get all data of the last 60 seconds
+SELECT * FROM locations WHERE time > NOW() - interval '60 sec';
 ```
