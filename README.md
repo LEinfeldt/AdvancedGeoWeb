@@ -35,6 +35,9 @@ CREATE TABLE locations (
     time   timestamp DEFAULT current_timestamp
 );
 
+-- install postgis
+CREATE EXTENSION postgis;
+
 -- Add a postgis geometry column (schema: public, table: locations, column: geom, srid: 4326, type: POINT, dimensions: 2)
 SELECT AddGeometryColumn ('public','locations','geom',4326,'POINT',2);
 
