@@ -48,12 +48,14 @@ app.post('/api/1.0/GPS', function(req, res) {
         //execute an operation
         client.query("INSERT INTO locations(geom) VALUES(ST_GeomFromText('POINT(" + req.body.geometry.coordinates[1] + " " + 
         req.body.geometry.coordinates[0] + ")', 4326));", function(err, result) {
-            //release client to pool
-            done();
-            res.status(200).send("Inserted location into the DB");
+            console.log('Inserted data');
             if(err) {
+                res.error('An error occured: ' + err);
                 return console.error('error in query', err);
             }
+            else res.status(200).send("Inserted location into the DB");
+            //release client to pool
+            done();
         });
     });
 });
