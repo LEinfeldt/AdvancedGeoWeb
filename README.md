@@ -35,6 +35,9 @@ CREATE TABLE locations (
     time   timestamp DEFAULT current_timestamp
 );
 
+-- install postgis
+CREATE EXTENSION postgis;
+
 -- Add a postgis geometry column (schema: public, table: locations, column: geom, srid: 4326, type: POINT, dimensions: 2)
 SELECT AddGeometryColumn ('public','locations','geom',4326,'POINT',2);
 
@@ -44,4 +47,7 @@ VALUES(ST_GeomFromText('POINT(-59.0513 53.7331)', 4326));
 
 -- Example: Get point
 SELECT ST_AsText(geom) FROM locations;
+
+-- Example: Get all data of the last 60 seconds
+SELECT * FROM locations WHERE time > NOW() - interval '60 sec';
 ```

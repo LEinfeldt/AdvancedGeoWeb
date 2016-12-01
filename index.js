@@ -60,6 +60,28 @@ app.post('/api/1.0/GPS', function(req, res) {
     });
 });
 
+app.get('/api/1.0/GPS', (req, res) => {
+  const results = [];
+  // Get a Postgres client from the connection pool
+  pool.connect(function(err, client, done) {
+	if (err) throw err;
+	
+	
+	// SQL Query > Select Data
+    const query = client.query("SELECT * FROM locations WHERE time > NOW() - interval '60 sec';");
+    // Stream results back one row at a time
+    query.on('row', (row) => {
+      results.push(row);
+    });
+    // After all data is returned, close connection and return results
+    query.on('end', () => {
+      done();
+      return res.json(results);
+    });
+  });
+});
+
+
 app.listen(8080, function() {
     console.log("Server listening on port 8080");
 });
