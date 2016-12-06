@@ -8,9 +8,24 @@ var config = require('./config.js');
 var express = require('express');
 var pg = require('pg');
 var bodyParser = require('body-parser');
+var fs  = require('fs');
 var app = express();
 //var client = new pg.Client();
 
+var httpsport = 8443
+
+require('https').createServer({
+	key: fs.readFileSync('apache.key'),
+	cert: fs.readFileSync('apache.crt')
+}, app).listen(httpsport);
+
+	/* Redirect all traffic over SSL */
+	app.set('port_https', httpsport);
+	app.all('*', function(req, res, next){
+		if (req.secure) return next();
+		res.redirect("https://" + req.hostname + ":" + httpsport + req.url);
+	});
+	console.log('https server now listening on port ' + httpsport);
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
