@@ -12,7 +12,7 @@ var fs  = require('fs');
 var app = express();
 //var client = new pg.Client();
 
-var httpsport = 8443
+var httpsport = 8443;
 
 require('https').createServer({
 	key: fs.readFileSync('apache.key'),
@@ -75,28 +75,34 @@ app.post('/api/1.0/GPS', function(req, res) {
     });
 });
 
-app.get('/api/1.0/GPS', (req, res) => {
-  const results = [];
-  // Get a Postgres client from the connection pool
-  pool.connect(function(err, client, done) {
-	if (err) throw err;
-	
-	
-	// SQL Query > Select Data
-    const query = client.query("SELECT * FROM locations WHERE time > NOW() - interval '60 sec';");
-    // Stream results back one row at a time
-    query.on('row', (row) => {
-      results.push(row);
+app.get('/api/1.0/GPS', function (req, res) {
+
+    const results = [];
+    // Get a Postgres client from the connection pool
+    pool.connect(function (err, client, done) {
+        if (err) throw err;
+
+        // SQL Query > Select Data
+        const query = client.query("SELECT id, ST_X(geom) AS longitude, ST_Y(geom) AS latitude, time FROM locations WHERE time > NOW() - interval '60 sec';");
+
+        query.on('row', function (row) {
+            results.push(row);
+        })
+        ;
+
+        // After all data is returned, close connection and return results
+        query.on('end', function () {
+            done();
+            return res.json(results);
+        })
+        ;
+
     });
-    // After all data is returned, close connection and return results
-    query.on('end', () => {
-      done();
-      return res.json(results);
-    });
-  });
-});
+
+})
+;
 
 
-app.listen(8080, function() {
+app.listen(8080, function () {
     console.log("Server listening on port 8080");
 });
