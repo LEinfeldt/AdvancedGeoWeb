@@ -62,5 +62,6 @@ CREATE TABLE wms (
 INSERT INTO wms(path)
 VALUES( '/usr/l_loho01/wms/wms-0001.png');
 
-
+-- Get all image paths
+SELECT * FROM wms;
 ```
