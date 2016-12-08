@@ -1,5 +1,7 @@
 # DB private user data
 config.js
+apache.crt
+apache.key
 
 #don't upload the node modules
 node_modules

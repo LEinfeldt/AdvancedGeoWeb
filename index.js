@@ -53,9 +53,7 @@ pool.on('error', function(err, client) {
  */
 app.post('/api/1.0/GPS', function(req, res) {
 
-    console.log("received some data");
-    console.log(req.body);
-    
+    console.log("received some data");    
     //Connect to the database
     pool.connect(function(err, client, done) {
         if (err) throw err;
@@ -83,8 +81,9 @@ app.get('/api/1.0/GPS', function (req, res) {
         if (err) throw err;
 
         // SQL Query > Select Data
-        const query = client.query("SELECT id, ST_X(geom) AS longitude, ST_Y(geom) AS latitude, time FROM locations WHERE time > NOW() - interval '60 sec';");
-
+        //const query = client.query("SELECT id, ST_X(geom) AS longitude, ST_Y(geom) AS latitude, time FROM locations WHERE time > NOW() - interval '60 sec';");
+        // for testing change query
+        const query = client.query("SELECT id, ST_X(geom) AS longitude, ST_Y(geom) AS latitude FROM locations;");
         query.on('row', function (row) {
             results.push(row);
         })
@@ -99,9 +98,31 @@ app.get('/api/1.0/GPS', function (req, res) {
 
     });
 
-})
-;
+});
 
+/**
+ * @desc Post data from processing results to the database.
+ */
+app.post('/api/1.0/timeslider/:string' , function(req, res) {
+   
+    var name = req.params.string;
+    //Connect to the database
+    pool.connect(function(err, client, done) {
+        if (err) throw err;
+
+        //execute an operation
+        client.query("INSERT INTO wms(path) VALUES('" + name + "');", function(err, result) {
+            console.log('Inserted time data');
+            if(err) {
+                res.error('An error occured: ' + err);
+                return console.error('error in query', err);
+            }
+            else res.status(200).send("Inserted history into the DB");
+            //release client to pool
+            done();
+        });
+    });
+})
 
 app.listen(8080, function () {
     console.log("Server listening on port 8080");
