@@ -50,4 +50,17 @@ SELECT ST_AsText(geom) FROM locations;
 
 -- Example: Get all data of the last 60 seconds
 SELECT * FROM locations WHERE time > NOW() - interval '60 sec';
+
+-- Create table for wms locations
+CREATE TABLE wms (
+    id      	BIGSERIAL,
+    path	VARCHAR,
+    time   timestamp DEFAULT current_timestamp
+);
+
+-- Example: Add wms image path
+INSERT INTO wms(path)
+VALUES( '/usr/l_loho01/wms/wms-0001.png');
+
+
 ```
