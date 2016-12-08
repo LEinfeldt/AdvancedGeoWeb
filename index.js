@@ -59,11 +59,11 @@ app.post('/api/1.0/GPS', function(req, res) {
         if (err) throw err;
 
         //execute an operation
-        client.query("INSERT INTO locations(geom,accuracy) VALUES(ST_GeomFromText('POINT(" + req.body.geometry.coordinates[1] + " " + 
-        req.body.geometry.coordinates[0] + ")', 4326),req.body.geometry.accuracy);", function(err, result) {
+        client.query("INSERT INTO locations(geom, accuracy) VALUES(ST_GeomFromText('POINT(" + req.body.geometry.coordinates[1] + " " + 
+        req.body.geometry.coordinates[0] + ")', 4326), " + req.body.properties.accuracy + ");", function(err, result) {
             console.log('Inserted data');
             if(err) {
-                res.error('An error occured: ' + err);
+                res.send('An error occured: ' + err);
                 return console.error('error in query', err);
             }
             else res.status(200).send("Inserted location into the DB");
