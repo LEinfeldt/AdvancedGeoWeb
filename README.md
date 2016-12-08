@@ -1,4 +1,4 @@
-# AdvanchedGeoWeb
+# AdvancedGeoWeb
 Repository for the course
 
 # Database setup
