@@ -83,7 +83,7 @@ app.get('/api/1.0/GPS', function (req, res) {
         // SQL Query > Select Data
         //const query = client.query("SELECT id, ST_X(geom) AS longitude, ST_Y(geom) AS latitude, time FROM locations WHERE time > NOW() - interval '60 sec';");
         // for testing change query
-        const query = client.query("SELECT id, ST_X(geom) AS longitude, ST_Y(geom) AS latitude FROM locations;");
+        const query = client.query("SELECT id, ST_X(geom) AS longitude, ST_Y(geom) AS latitude, time AS timestamp FROM locations;");
         query.on('row', function (row) {
             results.push(row);
         })
