@@ -15,8 +15,8 @@ var app = express();
 var httpsport = 8443;
 
 require('https').createServer({
-	key: fs.readFileSync('apache.key'),
-	cert: fs.readFileSync('apache.crt')
+	key: fs.readFileSync('newkey.pem'),
+	cert: fs.readFileSync('cert_WWU.pem')
 }, app).listen(httpsport);
 
 	/* Redirect all traffic over SSL */
