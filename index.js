@@ -125,13 +125,13 @@ app.post('/api/1.0/timeslider/:string', function(req, res) {
  * @desc Return the DB entries from the last 10 minutes in a JSON file
  * @return JSON file containing the time and paths from the DB (last 10 min)
  */
-app.get('/api/1.0/timeslider/', function(req, res) {
+app.get('/api/1.0/timeslider', function(req, res) {
 
-    var timespan = req.params//=====
-
-    pool.connect(function (err, client, done) {
+    var results = [];
+    //Connect to the database
+    pool.connect(function(err, client, done) {
         if (err) throw err;
-        client.query("SELECT time, path FROM wms WHERE time > NOW() - interval '10 min';");
+        var query = client.query("SELECT time, path FROM wms WHERE time > NOW() - interval '10 min';");
         query.on('row', function (row) {
             results.push(row);
         });
