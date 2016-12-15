@@ -86,16 +86,13 @@ app.get('/api/1.0/GPS', function (req, res) {
         const query = client.query("SELECT id, ST_X(geom) AS longitude, ST_Y(geom) AS latitude, time AS timestamp, accuracy, crs FROM locations;");
         query.on('row', function (row) {
             results.push(row);
-        })
-        ;
+        });
 
         // After all data is returned, close connection and return results
         query.on('end', function () {
             done();
             return res.json(results);
-        })
-        ;
-
+        });
     });
 
 });
@@ -103,7 +100,7 @@ app.get('/api/1.0/GPS', function (req, res) {
 /**
  * @desc Post data from processing results to the database.
  */
-app.post('/api/1.0/timeslider/:string' , function(req, res) {
+app.post('/api/1.0/timeslider/:string', function(req, res) {
    
     var name = req.params.string;
     //Connect to the database
@@ -120,6 +117,28 @@ app.post('/api/1.0/timeslider/:string' , function(req, res) {
             else res.status(200).send("Inserted history into the DB");
             //release client to pool
             done();
+        });
+    });
+})
+
+/**
+ * @desc Return the DB entries from the last 10 minutes in a JSON file
+ * @return JSON file containing the time and paths from the DB (last 10 min)
+ */
+app.get('/api/1.0/timeslider/', function(req, res) {
+
+    var timespan = req.params//=====
+
+    pool.connect(function (err, client, done) {
+        if (err) throw err;
+        client.query("SELECT time, path FROM wms WHERE time > NOW() - interval '10 min';");
+        query.on('row', function (row) {
+            results.push(row);
+        });
+        // After all data is returned, close connection and return results
+        query.on('end', function () {
+            done();
+            return res.json(results);
         });
     });
 })
