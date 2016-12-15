@@ -12,21 +12,6 @@ var fs  = require('fs');
 var app = express();
 //var client = new pg.Client();
 
-var httpsport = 8443;
-
-require('https').createServer({
-	key: fs.readFileSync('newkey.pem'),
-	cert: fs.readFileSync('cert_WWU.pem')
-}, app).listen(httpsport);
-
-	/* Redirect all traffic over SSL */
-	app.set('port_https', httpsport);
-	app.all('*', function(req, res, next){
-		if (req.secure) return next();
-		res.redirect("https://" + req.hostname + ":" + httpsport + req.url);
-	});
-	console.log('https server now listening on port ' + httpsport);
-
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -57,10 +42,11 @@ app.post('/api/1.0/GPS', function(req, res) {
     //Connect to the database
     pool.connect(function(err, client, done) {
         if (err) throw err;
-
+        // SQL Query > Insert Data
         //execute an operation
-        client.query("INSERT INTO locations(geom, accuracy) VALUES(ST_GeomFromText('POINT(" + req.body.geometry.coordinates[1] + " " + 
-        req.body.geometry.coordinates[0] + ")', 4326), " + req.body.properties.accuracy + ");", function(err, result) {
+        client.query("INSERT INTO locations(geom, accuracy) VALUES(ST_SetSRID(ST_GeomFromGeoJSON($1::text), 4326), $2::int)",
+            [JSON.stringify(req.body.geometry), req.body.properties.accuracy],
+            function(err, result) {
             console.log('Inserted data');
             if(err) {
                 res.send('An error occured: ' + err);
