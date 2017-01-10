@@ -33,7 +33,7 @@ Source: http://www.paulshapley.com/2016/04/how-to-install-postgresql-95-and.html
 CREATE TABLE locations (
     id       BIGSERIAL,
     time     timestamp DEFAULT current_timestamp,
-    accuracy 
+    accuracy INTEGER
 );
 
 -- install postgis
