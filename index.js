@@ -80,7 +80,6 @@ app.get('/api/1.0/GPS', function (req, res) {
             return res.json(results);
         });
     });
-
 });
 
 /**
@@ -105,7 +104,7 @@ app.post('/api/1.0/timeslider/:string', function(req, res) {
             done();
         });
     });
-})
+});
 
 /**
  * @desc Return the DB entries from the last 10 minutes in a JSON file
@@ -128,7 +127,7 @@ app.get('/api/1.0/timeslider/:number', function(req, res) {
             return res.json(results);
         });
     });
-})
+});
 
 app.listen(8080, function () {
     console.log("Server listening on port 8080");
