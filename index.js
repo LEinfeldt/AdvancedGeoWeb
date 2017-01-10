@@ -108,7 +108,7 @@ app.post('/api/1.0/timeslider/:string', function(req, res) {
         if (err) throw err;
 
         //execute an operation
-        client.query("INSERT INTO wms(path) VALUES('" + name + "');", function(err, result) {
+        client.query("INSERT INTO wms(path) VALUES($1::text);", [name], function(err, result) {
             console.log('Inserted time data');
             if(err) {
                 res.error('An error occured: ' + err);
@@ -134,7 +134,7 @@ app.get('/api/1.0/timeslider/:number', function(req, res) {
 
 
         if (err) throw err;
-        var query = client.query("SELECT time, path FROM wms WHERE time > NOW() - interval $1::text;", time);
+        var query = client.query("SELECT time, path FROM wms WHERE time > NOW() - interval '" + time + "';");
         query.on('row', function (row) {
             results.push(row);
         });
