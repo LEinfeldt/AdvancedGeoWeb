@@ -12,6 +12,21 @@ var fs  = require('fs');
 var app = express();
 //var client = new pg.Client();
 
+var httpsport = 8443;
+
+require('https').createServer({
+    key: fs.readFileSync('newkey.pem'),
+    cert: fs.readFileSync('cert_WWU.pem')
+}, app).listen(httpsport);
+
+/* Redirect all traffic over SSL */
+app.set('port_https', httpsport);
+app.all('*', function(req, res, next){
+    if (req.secure) return next();
+    res.redirect("https://" + req.hostname + ":" + httpsport + req.url);
+});
+console.log('https server now listening on port ' + httpsport);
+
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -112,12 +127,14 @@ app.post('/api/1.0/timeslider/:string', function(req, res) {
  */
 app.get('/api/1.0/timeslider/:number', function(req, res) {
 
-    var number = req.params.number;
+    var time = req.params.number + " min";
     var results = [];
     //Connect to the database
     pool.connect(function(err, client, done) {
+
+
         if (err) throw err;
-        var query = client.query("SELECT time, path FROM wms WHERE time > NOW() - interval '$1::int min';", [number]);
+        var query = client.query("SELECT time, path FROM wms WHERE time > NOW() - interval $1::text;", time);
         query.on('row', function (row) {
             results.push(row);
         });
