@@ -32,7 +32,8 @@ Source: http://www.paulshapley.com/2016/04/how-to-install-postgresql-95-and.html
 -- Create a table for user's postions
 CREATE TABLE locations (
     id       BIGSERIAL,
-    time   timestamp DEFAULT current_timestamp
+    time     timestamp DEFAULT current_timestamp,
+    accuracy 
 );
 
 -- install postgis
