@@ -144,6 +144,23 @@ app.get('/api/1.0/timeslider/:number', function(req, res) {
     });
 });
 
+app.get('/api/1.0/currentPicture', function(req, res) {
+
+    var result = [];
+
+    pool.connect(function(err, client, done) {
+        if(err) throw err;
+        var query = client.query("SELECT path, bbox FROM wms ORDER BY time DESC LIMIT 1;");
+        query.on('row', function(row) {
+            result = row;
+        });
+        query.on('end', function() {
+            done();
+            return res.json(result);
+        });
+    });
+});
+
 app.listen(8080, function () {
     console.log("Server listening on port 8080");
 });
