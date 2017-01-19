@@ -33,7 +33,8 @@ Source: http://www.paulshapley.com/2016/04/how-to-install-postgresql-95-and.html
 CREATE TABLE locations (
     id       BIGSERIAL,
     time     timestamp DEFAULT current_timestamp,
-    accuracy INTEGER
+    accuracy INTEGER,
+    crs      VARCHAR DEFAULT 'WGS84'
 );
 
 -- install postgis
@@ -54,9 +55,10 @@ SELECT * FROM locations WHERE time > NOW() - interval '60 sec';
 
 -- Create table for wms locations
 CREATE TABLE wms (
-    id      	BIGSERIAL,
+    id      BIGSERIAL,
     path	VARCHAR,
-    time   timestamp DEFAULT current_timestamp
+    time    timestamp DEFAULT current_timestamp,
+    bbox    VARCHAR
 );
 
 -- Example: Add wms image path
