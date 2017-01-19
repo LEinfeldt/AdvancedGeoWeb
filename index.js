@@ -132,7 +132,7 @@ app.get('/api/1.0/timeslider/:number', function(req, res) {
     //Connect to the database
     pool.connect(function(err, client, done) {
         if (err) throw err;
-        var query = client.query("SELECT time, path FROM wms WHERE time > NOW() - ($1 || ' min')::interval;", [req.params.number]);
+        var query = client.query("SELECT time, path, bbox FROM wms WHERE time > NOW() - ($1 || ' min')::interval ORDER BY time DESC;", [req.params.number]);
         query.on('row', function (row) {
             results.push(row);
         });
@@ -144,13 +144,18 @@ app.get('/api/1.0/timeslider/:number', function(req, res) {
     });
 });
 
+
+/**
+ * @desc Send the newest png in the DB to the client
+ * @return JSON with one item --> the newest picture with its bbox
+ */
 app.get('/api/1.0/currentPicture', function(req, res) {
 
     var result = [];
 
     pool.connect(function(err, client, done) {
         if(err) throw err;
-        var query = client.query("SELECT path, bbox FROM wms ORDER BY time DESC LIMIT 1;");
+        var query = client.query("SELECT path, bbox, time FROM wms ORDER BY time DESC LIMIT 1;");
         query.on('row', function(row) {
             result = row;
         });
