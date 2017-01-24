@@ -34,7 +34,7 @@ inserts the values (from the URL parameter) into the database
 - bounds, the boundingbox of the wms as varchar (containing two points indicating the diagonal)
 - timestamp, automatically generate current timestamp as the geometry is inserted into the database
 
-example: `curl -k -X POST 'https://giv-project13.uni-muenster.de:8443/api/1.0/timeslider/density.png/L.latLngBounds(L.lat7.5945987)%2C%20L.latLng(51.9735946%2C%207.598831000000001))'`<br>
+example: `curl -k -X POST 'https://giv-project13.uni-muenster.de:8443/api/1.0/timeslider/https%3A%2F%2Fgiv-project13.uni-muenster.de%2Fimages%2FPlants-PNG-File.png/%5B%5B51.960485500000004%2C%207.5945987%5D%2C%5B51.9735946%2C%207.598831000000001%5D%5D'`<br>
 response: `Inserted history into the DB`
 
 ## /api/1.0/timeslider/:number
