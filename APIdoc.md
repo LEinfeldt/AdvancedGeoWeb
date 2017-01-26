@@ -46,7 +46,9 @@ response: `Inserted history into the DB`
 
 returns the values of the wms from the last ':number' minutes as json
 - time, the timestamp of the wms
-- path, the path of the wms as varchar 
+- path, the path of the wms as varchar
+- bbox, the boundingbox of the wms as a string (containing two points indicating the diagonal)
+
 
 example: `curl --insecure https://giv-project13.uni-muenster.de:8443/api/1.0/timeslider/10`<br>
 response: `[{"time":"2017-01-17T11:36:11.781Z","path":"/var/img/test0001.png"}]`
@@ -56,8 +58,9 @@ response: `[{"time":"2017-01-17T11:36:11.781Z","path":"/var/img/test0001.png"}]`
 ### GET returns params: path, bbox
 
 returns the following values of the latest wms from the database as json
-- path, the path of the wms as a string
-- bbox, the boundingbox of the wms as a string (see http://leafletjs.com/reference.html#latlngbounds) (containing two points indicating the diagonal)
+- path, the path of the image as a string
+- bbox, the boundingbox of the wms as a string (containing two points indicating the diagonal)
+- time, the timestamp of the wms
 
-example: `curl --insecure https://giv-project13.uni-muenster.de:8443/api/1.0/currentPicture`<br>
-response: `[{"time":"2017-01-17T11:36:11.781Z","path":"/var/img/test0001.png"}]`
+example: `curl -k https://giv-project13.uni-muenster.de:8443/api/1.0/currentPicture`<br>
+response: `{"path":"20170126-105400_heatmap.png","bbox":"[[7.5740204, 7.2274019], [51.9735946, 51.9766042]]","time":"2017-01-26T09:54:00.455Z"}`
