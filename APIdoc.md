@@ -5,10 +5,10 @@
 ### POST
 
 #### body parameters:
-- GeoJSON geometry (see http://geojson.org/geojson-spec.html#geometry-objects) including accuracy as a GeoJSON properties object
+- GeoJSON geometry (see http://geojson.org/geojson-spec.html#geometry-objects) including latitude, longitude and accuracy as a GeoJSON properties object
 
-inserts the values (got from the body of the http request) into the database
-- geometry, add the current position as Geometry with longitude and latitude with the default spatial reference identifier 4326
+Inserts the values (got from the body of the http request) into the database
+- geometry, add the current position as Geometry with latitude and longitude with the default spatial reference identifier 4326
 - accuracy, the number of digits from the geometry as Integer
 - timestamp, automatically generate current timestamp as the geometry is inserted into the database
 
